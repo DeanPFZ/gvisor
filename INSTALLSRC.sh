@@ -6,7 +6,7 @@ echo "
 
 "
 echo ">>> Installing Bazel to build gvisor"
-sudo apt-get install pkg-config zip g++ zlib1g-dev unzip python
+sudo apt-get install pkg-config zip g++ zlib1g-dev unzip python openjdk-11-jdk
 
 echo "
 
