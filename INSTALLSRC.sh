@@ -6,7 +6,7 @@ echo "
 
 "
 echo ">>> Installing Bazel to build gvisor"
-sudo apt-get install pkg-config zip g++ zlib1g-dev unzip python openjdk-11-jdk
+sudo apt-get install pkg-config zip g++ zlib1g-dev unzip python openjdk-8-jdk
 
 echo "
 
@@ -40,7 +40,7 @@ echo "
 
 "
 echo ">>> Building runsc.."
-sudo bazel clean
+sudo bazel clean --expunge
 bazel build runsc
 
 echo "
