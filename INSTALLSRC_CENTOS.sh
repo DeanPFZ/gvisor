@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Prerequisites
+# Git (sudo yum install git)
+
 # Virtual Machine Needed!
 # Using Vagrant..
 # >> vagrant box add centos/7
