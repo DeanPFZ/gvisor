@@ -16,8 +16,8 @@ echo "
 
 "
 echo ">>> Installing Bazel to build gvisor"
-sudo yum install zip zlib-devel unzip python java-1.8.0-openjdk gcc-c++
-sudo yum groupinstall "Development Tools" #pkg-config download
+sudo yum -y install zip zlib-devel unzip python java-1.8.0-openjdk gcc-c++
+sudo yum -y groupinstall "Development Tools" #pkg-config download
 
 echo "
 
@@ -25,7 +25,7 @@ echo "
 echo ">>> Installing bazel to ~/bin"
 sudo curl -O0RL https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo
 sudo mv vbatts-bazel-epel-7.repo /etc/yum.repos.d/
-sudo yum install bazel
+sudo yum -y install bazel
 
 echo "
 
@@ -33,20 +33,20 @@ echo "
 echo ">>> Installing Docker"
 yum install -y yum-utils device-mapper-persistent-data lvm2
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-yum install docker-ce
+yum -y install docker-ce
 
 
 echo "
 
 "
 echo ">>> Installing binutils"
-sudo yum install binutils
+sudo yum -y install binutils
 
 echo "
 
 "
 echo ">>> Installing golang"
-sudo yum install golang golang-src -y
+sudo yum -y install golang golang-src -y
 
 
 
