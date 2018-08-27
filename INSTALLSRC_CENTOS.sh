@@ -75,3 +75,15 @@ else
 fi
 
 sudo systemctl restart docker
+
+# Need to disable SELinux by changing /etc/selinux/config to have SELINUX=disabled
+
+# Need to install latest Linux version with following commands
+# sudo rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+# sudo rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm 
+# sudo yum --enablerepo=elrepo-kernel install kernel-ml
+
+# Change /etc/default/grub to GRUB_DEFAULT=0 - to enable newest linux version
+# sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+
+# REBOOT SYSTEM - then should be able to use gvisor environment
