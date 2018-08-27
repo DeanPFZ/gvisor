@@ -31,10 +31,9 @@ echo "
 
 "
 echo ">>> Installing Docker"
-yum install -y yum-utils device-mapper-persistent-data lvm2
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-yum install docker-ce
-
+# sudo yum remove -y docker docker-common docker-selinux docker-engine
+sudo yum-config-manager --add-repo https://packages.docker.com/1.12/yum/repo/main/centos/7
+sudo yum -y install docker-engine
 
 echo "
 
@@ -70,12 +69,12 @@ echo "
 
 echo ">>> Configuring Docker to use runsc"
 
-if grep -q 'runsc' "/etc/docker/daemon.json"; then
+if [[ -f "/etc/docker/daemon.json" ]] && grep -q runsc "/etc/docker/daemon.json" 
+then
 	echo "Already Configured"
 else
 
-	sudo bash -c "echo '
-{
+	sudo bash -c "echo '{
     \"runtimes\": {
         \"runsc\": {
             \"path\": \"/usr/local/bin/runsc\"
@@ -89,9 +88,9 @@ sudo systemctl restart docker
 # Need to disable SELinux by changing /etc/selinux/config to have SELINUX=disabled
 
 # Need to install latest Linux version with following commands
-# sudo rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
-# sudo rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm 
-# sudo yum --enablerepo=elrepo-kernel install kernel-ml
+sudo rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+sudo rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm 
+sudo yum --enablerepo=elrepo-kernel install kernel-ml
 
 # Change /etc/default/grub to GRUB_DEFAULT=0 - to enable newest linux version
 # sudo grub2-mkconfig -o /boot/grub2/grub.cfg
