@@ -15,6 +15,8 @@
 package linux
 
 import (
+	"fmt"
+
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/kernel"
@@ -72,6 +74,7 @@ func getrusage(t *kernel.Task, which int32) linux.Rusage {
 //	y    long   ru_nvcsw;         /* voluntary context switches */
 //	y    long   ru_nivcsw;        /* involuntary context switches */
 func Getrusage(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getrusage(2)\n")
 	which := args[0].Int()
 	addr := args[1].Pointer()
 
@@ -86,6 +89,7 @@ func Getrusage(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sys
 
 // Times implements linux syscall times(2).
 func Times(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: times(2)\n")
 	addr := args[0].Pointer()
 
 	// Calculate the ticks first, and figure out if any additional work is

@@ -17,6 +17,7 @@ package linux
 import (
 	"io"
 	"math"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/rand"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -39,6 +40,7 @@ const (
 // the GRND_RANDOM flag is ignored. The GRND_NONBLOCK flag does not apply, as
 // the pool will already be initialized.
 func GetRandom(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getrandom(2)\n")
 	addr := args[0].Pointer()
 	length := args[1].SizeT()
 	flags := args[2].Int()

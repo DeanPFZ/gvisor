@@ -16,6 +16,7 @@ package linux
 
 import (
 	"bytes"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -29,6 +30,7 @@ import (
 
 // Brk implements linux syscall brk(2).
 func Brk(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: brk(2)\n")
 	addr, _ := t.MemoryManager().Brk(t, args[0].Pointer())
 	// "However, the actual Linux system call returns the new program break on
 	// success. On failure, the system call returns the current break." -
@@ -38,6 +40,7 @@ func Brk(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallCo
 
 // Mmap implements linux syscall mmap(2).
 func Mmap(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: mmap(2)\n")
 	prot := args[2].Int()
 	flags := args[3].Int()
 	fd := kdefs.FD(args[4].Int())
@@ -104,11 +107,13 @@ func Mmap(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallC
 
 // Munmap implements linux syscall munmap(2).
 func Munmap(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: munmap(2)\n")
 	return 0, nil, t.MemoryManager().MUnmap(t, args[0].Pointer(), args[1].Uint64())
 }
 
 // Mremap implements linux syscall mremap(2).
 func Mremap(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: mremap(2)\n")
 	oldAddr := args[0].Pointer()
 	oldSize := args[1].Uint64()
 	newSize := args[2].Uint64()
@@ -143,6 +148,7 @@ func Mremap(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 
 // Mprotect implements linux syscall mprotect(2).
 func Mprotect(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: mprotect(2)\n")
 	length := args[1].Uint64()
 	prot := args[2].Int()
 	err := t.MemoryManager().MProtect(args[0].Pointer(), length, usermem.AccessType{
@@ -155,6 +161,7 @@ func Mprotect(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysc
 
 // Madvise implements linux syscall madvise(2).
 func Madvise(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: madvise(2)\n")
 	addr := args[0].Pointer()
 	length := uint64(args[1].SizeT())
 	adv := args[2].Int()
@@ -210,6 +217,7 @@ func copyOutIfNotNull(t *kernel.Task, ptr usermem.Addr, val interface{}) (int, e
 
 // GetMempolicy implements the syscall get_mempolicy(2).
 func GetMempolicy(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: get_mempolicy(2)\n")
 	mode := args[0].Pointer()
 	nodemask := args[1].Pointer()
 	maxnode := args[2].Uint()
@@ -304,6 +312,7 @@ func allowedNodesMask() uint32 {
 
 // SetMempolicy implements the syscall set_mempolicy(2).
 func SetMempolicy(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: set_mempolicy(2)\n")
 	modeWithFlags := args[0].Int()
 	nodemask := args[1].Pointer()
 	maxnode := args[2].Uint()
@@ -345,6 +354,7 @@ func SetMempolicy(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.
 
 // Mincore implements the syscall mincore(2).
 func Mincore(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: mincore(2)\n")
 	addr := args[0].Pointer()
 	length := args[1].SizeT()
 	vec := args[2].Pointer()
@@ -377,6 +387,7 @@ func Mincore(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // Msync implements Linux syscall msync(2).
 func Msync(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: msync(2)\n")
 	addr := args[0].Pointer()
 	length := args[1].SizeT()
 	flags := args[2].Int()

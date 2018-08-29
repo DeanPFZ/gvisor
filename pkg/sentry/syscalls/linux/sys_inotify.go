@@ -16,6 +16,7 @@ package linux
 
 import (
 	"syscall"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -29,6 +30,7 @@ const allFlags = int(linux.IN_NONBLOCK | linux.IN_CLOEXEC)
 
 // InotifyInit1 implements the inotify_init1() syscalls.
 func InotifyInit1(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: InotifyInit1\n")
 	flags := int(args[0].Int())
 
 	if flags&^allFlags != 0 {
@@ -82,6 +84,7 @@ func fdToInotify(t *kernel.Task, fd kdefs.FD) (*fs.Inotify, *fs.File, error) {
 
 // InotifyAddWatch implements the inotify_add_watch() syscall.
 func InotifyAddWatch(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: inotify_add_watch\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	mask := args[2].Uint()
@@ -123,6 +126,7 @@ func InotifyAddWatch(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kern
 
 // InotifyRmWatch implements the inotify_rm_watch() syscall.
 func InotifyRmWatch(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: inotify_rm_watch\n")
 	fd := kdefs.FD(args[0].Int())
 	wd := args[1].Int()
 

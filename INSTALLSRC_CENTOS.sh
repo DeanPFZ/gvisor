@@ -47,11 +47,12 @@ echo "
 echo ">>> Installing golang"
 sudo yum -y install golang golang-src -y
 
+echo "
 
-
+"
 echo ">>> Building runsc.."
 sudo bazel clean --expunge
-bazel build runsc
+bazel build --verbose_failures runsc
 
 echo "
 

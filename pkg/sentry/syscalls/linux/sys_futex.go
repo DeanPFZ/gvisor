@@ -16,6 +16,7 @@ package linux
 
 import (
 	"time"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -232,6 +233,7 @@ func futexWaitDuration(t *kernel.Task, duration time.Duration, forever bool, add
 // It provides a method for a program to wait for a value at a given address to
 // change, and a method to wake up anyone waiting on a particular address.
 func Futex(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: futex(2)\n")
 	uaddr := args[0].Pointer()
 	futexOp := args[1].Int()
 	val := int(args[2].Int())

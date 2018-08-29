@@ -17,6 +17,7 @@ package linux
 import (
 	"math"
 	"time"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -63,6 +64,7 @@ func mayKill(t *kernel.Task, target *kernel.Task, sig linux.Signal) bool {
 
 // Kill implements linux syscall kill(2).
 func Kill(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: kill(2)\n")
 	pid := kernel.ThreadID(args[0].Int())
 	sig := linux.Signal(args[1].Int())
 
@@ -193,6 +195,7 @@ func tkillSigInfo(sender, receiver *kernel.Task, sig linux.Signal) *arch.SignalI
 
 // Tkill implements linux syscall tkill(2).
 func Tkill(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: tkill(2)\n")
 	tid := kernel.ThreadID(args[0].Int())
 	sig := linux.Signal(args[1].Int())
 
@@ -215,6 +218,7 @@ func Tkill(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 
 // Tgkill implements linux syscall tgkill(2).
 func Tgkill(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: tgkill(2)\n")
 	tgid := kernel.ThreadID(args[0].Int())
 	tid := kernel.ThreadID(args[1].Int())
 	sig := linux.Signal(args[2].Int())
@@ -239,6 +243,7 @@ func Tgkill(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 
 // RtSigaction implements linux syscall rt_sigaction(2).
 func RtSigaction(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: rt_sigaction(2)\n")
 	sig := linux.Signal(args[0].Int())
 	newactarg := args[1].Pointer()
 	oldactarg := args[2].Pointer()
@@ -265,18 +270,21 @@ func RtSigaction(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.S
 
 // Sigreturn implements linux syscall sigreturn(2).
 func Sigreturn(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sigreturn(2)\n")
 	ctrl, err := t.SignalReturn(false)
 	return 0, ctrl, err
 }
 
 // RtSigreturn implements linux syscall rt_sigreturn(2).
 func RtSigreturn(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: rt_sigreturn(2)\n")
 	ctrl, err := t.SignalReturn(true)
 	return 0, ctrl, err
 }
 
 // RtSigprocmask implements linux syscall rt_sigprocmask(2).
 func RtSigprocmask(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: rt_sigprocmask(2)\n")
 	how := args[0].Int()
 	setaddr := args[1].Pointer()
 	oldaddr := args[2].Pointer()
@@ -312,6 +320,7 @@ func RtSigprocmask(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel
 
 // Sigaltstack implements linux syscall sigaltstack(2).
 func Sigaltstack(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sigalstack(2)\n")
 	setaddr := args[0].Pointer()
 	oldaddr := args[1].Pointer()
 
@@ -340,6 +349,7 @@ func Sigaltstack(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.S
 
 // Pause implements linux syscall pause(2).
 func Pause(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: pause(2)\n")
 	return 0, nil, syserror.ConvertIntr(t.Block(nil), kernel.ERESTARTNOHAND)
 }
 
@@ -383,6 +393,7 @@ func sigtimedwait(t *kernel.Task, mask linux.SignalSet, timeout time.Duration) (
 
 // RtSigpending implements linux syscall rt_sigpending(2).
 func RtSigpending(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: rt_sigpending(2)\n")
 	addr := args[0].Pointer()
 	pending := t.PendingSignals()
 	_, err := t.CopyOut(addr, pending)
@@ -391,6 +402,7 @@ func RtSigpending(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.
 
 // RtSigtimedwait implements linux syscall rt_sigtimedwait(2).
 func RtSigtimedwait(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: rt_sigtimedwait(2)\n")
 	sigset := args[0].Pointer()
 	siginfo := args[1].Pointer()
 	timespec := args[2].Pointer()
@@ -436,6 +448,7 @@ func RtSigtimedwait(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kerne
 
 // RtSigqueueinfo implements linux syscall rt_sigqueueinfo(2).
 func RtSigqueueinfo(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: rt_sigqueueinfo(2)\n")
 	pid := kernel.ThreadID(args[0].Int())
 	sig := linux.Signal(args[1].Int())
 	infoAddr := args[2].Pointer()
@@ -477,6 +490,7 @@ func RtSigqueueinfo(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kerne
 
 // RtTgsigqueueinfo implements linux syscall rt_tgsigqueueinfo(2).
 func RtTgsigqueueinfo(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: rt_tgsigqueueinfo(2)\n")
 	tgid := kernel.ThreadID(args[0].Int())
 	tid := kernel.ThreadID(args[1].Int())
 	sig := linux.Signal(args[2].Int())
@@ -516,6 +530,7 @@ func RtTgsigqueueinfo(t *kernel.Task, args arch.SyscallArguments) (uintptr, *ker
 
 // RtSigsuspend implements linux syscall rt_sigsuspend(2).
 func RtSigsuspend(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: rt_sigsuspend(2)\n")
 	sigset := args[0].Pointer()
 
 	// Copy in the signal mask.
@@ -536,6 +551,7 @@ func RtSigsuspend(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.
 
 // RestartSyscall implements the linux syscall restart_syscall(2).
 func RestartSyscall(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: restart_syscall(2)\n")
 	if r := t.SyscallRestartBlock(); r != nil {
 		n, err := r.Restart(t)
 		return n, nil, err

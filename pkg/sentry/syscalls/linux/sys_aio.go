@@ -26,6 +26,7 @@ import (
 	"gvisor.googlesource.com/gvisor/pkg/sentry/mm"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/usermem"
 	"gvisor.googlesource.com/gvisor/pkg/syserror"
+	"fmt"
 )
 
 // I/O commands.
@@ -83,6 +84,8 @@ var ioEventSize = binary.Size(ioEvent{})
 
 // IoSetup implements linux syscall io_setup(2).
 func IoSetup(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: io_setup(2)\n")
+
 	nrEvents := args[0].Int()
 	idAddr := args[1].Pointer()
 
@@ -113,6 +116,7 @@ func IoSetup(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // IoDestroy implements linux syscall io_destroy(2).
 func IoDestroy(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: io_destroy(2)\n")
 	id := args[0].Uint64()
 
 	// Destroy the given context.
@@ -127,6 +131,7 @@ func IoDestroy(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sys
 
 // IoGetevents implements linux syscall io_getevents(2).
 func IoGetevents(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: io_getevents(2)\n")
 	id := args[0].Uint64()
 	minEvents := args[1].Int()
 	events := args[2].Int()
@@ -357,6 +362,7 @@ func submitCallback(t *kernel.Task, id uint64, cb *ioCallback, cbAddr usermem.Ad
 
 // IoSubmit implements linux syscall io_submit(2).
 func IoSubmit(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: io_submit(2)\n")
 	id := args[0].Uint64()
 	nrEvents := args[1].Int()
 	addr := args[2].Pointer()
@@ -412,5 +418,6 @@ func IoSubmit(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysc
 // It is not presently supported (ENOSYS indicates no support on this
 // architecture).
 func IoCancel(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: io_cancel(2)\n")
 	return 0, nil, syserror.ENOSYS
 }

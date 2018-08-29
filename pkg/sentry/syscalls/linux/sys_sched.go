@@ -16,6 +16,7 @@ package linux
 
 import (
 	"syscall"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -34,6 +35,7 @@ type SchedParam struct {
 
 // SchedGetparam implements linux syscall sched_getparam(2).
 func SchedGetparam(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sched_getparam(2)\n")
 	pid := args[0].Int()
 	param := args[1].Pointer()
 	if param == 0 {
@@ -55,6 +57,7 @@ func SchedGetparam(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel
 
 // SchedGetscheduler implements linux syscall sched_getscheduler(2).
 func SchedGetscheduler(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sched_getscheduler(2)\n")
 	pid := args[0].Int()
 	if pid < 0 {
 		return 0, nil, syscall.EINVAL
@@ -67,6 +70,7 @@ func SchedGetscheduler(t *kernel.Task, args arch.SyscallArguments) (uintptr, *ke
 
 // SchedSetscheduler implements linux syscall sched_setscheduler(2).
 func SchedSetscheduler(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sched_setscheduler(2)\n")
 	pid := args[0].Int()
 	policy := args[1].Int()
 	param := args[2].Pointer()
@@ -91,10 +95,12 @@ func SchedSetscheduler(t *kernel.Task, args arch.SyscallArguments) (uintptr, *ke
 
 // SchedGetPriorityMax implements linux syscall sched_get_priority_max(2).
 func SchedGetPriorityMax(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sched_get_priority_max(2)\n")
 	return onlyPriority, nil, nil
 }
 
 // SchedGetPriorityMin implements linux syscall sched_get_priority_min(2).
 func SchedGetPriorityMin(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sched_get_priority_min(2)\n")
 	return onlyPriority, nil, nil
 }

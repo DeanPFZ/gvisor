@@ -15,6 +15,8 @@
 package linux
 
 import (
+	"fmt"
+
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/fs"
@@ -35,6 +37,7 @@ const (
 // they can do large reads all at once.  Bug for bug.  Same for other read
 // calls below.
 func Read(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: read(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	size := args[2].SizeT()
@@ -71,6 +74,7 @@ func Read(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallC
 
 // Pread64 implements linux syscall pread64(2).
 func Pread64(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: pread64(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	size := args[2].SizeT()
@@ -118,6 +122,7 @@ func Pread64(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // Readv implements linux syscall readv(2).
 func Readv(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: readv(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	iovcnt := int(args[2].Int())
@@ -148,6 +153,7 @@ func Readv(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 
 // Preadv implements linux syscall preadv(2).
 func Preadv(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: preadv(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	iovcnt := int(args[2].Int())

@@ -20,6 +20,7 @@ import (
 	"gvisor.googlesource.com/gvisor/pkg/sentry/kernel"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/kernel/auth"
 	"gvisor.googlesource.com/gvisor/pkg/syserror"
+	"fmt"
 )
 
 func lookupCaps(t *kernel.Task, tid kernel.ThreadID) (permitted, inheritable, effective auth.CapabilitySet, err error) {
@@ -41,6 +42,7 @@ func lookupCaps(t *kernel.Task, tid kernel.ThreadID) (permitted, inheritable, ef
 
 // Capget implements Linux syscall capget.
 func Capget(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: capget\n")
 	hdrAddr := args[0].Pointer()
 	dataAddr := args[1].Pointer()
 
@@ -105,6 +107,7 @@ func Capget(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 
 // Capset implements Linux syscall capset.
 func Capset(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: capset\n")
 	hdrAddr := args[0].Pointer()
 	dataAddr := args[1].Pointer()
 

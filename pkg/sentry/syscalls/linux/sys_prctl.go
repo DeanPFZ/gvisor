@@ -16,6 +16,7 @@ package linux
 
 import (
 	"syscall"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -29,6 +30,7 @@ import (
 // It has a list of subfunctions which operate on the process. The arguments are
 // all based on each subfunction.
 func Prctl(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: prctl(2)\n")
 	option := args[0].Int()
 
 	switch option {

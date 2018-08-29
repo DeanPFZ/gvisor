@@ -16,6 +16,7 @@ package linux
 
 import (
 	"time"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -303,6 +304,7 @@ func poll(t *kernel.Task, pfdAddr usermem.Addr, nfds uint, timeout time.Duration
 
 // Poll implements linux syscall poll(2).
 func Poll(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: poll(2)\n")
 	pfdAddr := args[0].Pointer()
 	nfds := uint(args[1].Uint()) // poll(2) uses unsigned long.
 	timeout := time.Duration(args[2].Int()) * time.Millisecond
@@ -312,6 +314,7 @@ func Poll(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallC
 
 // Ppoll implements linux syscall ppoll(2).
 func Ppoll(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: ppoll(2)\n")
 	pfdAddr := args[0].Pointer()
 	nfds := uint(args[1].Uint()) // poll(2) uses unsigned long.
 	timespecAddr := args[2].Pointer()
@@ -357,6 +360,7 @@ func Ppoll(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 
 // Select implements linux syscall select(2).
 func Select(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: select(2)\n")
 	nfds := int(args[0].Int()) // select(2) uses an int.
 	readFDs := args[1].Pointer()
 	writeFDs := args[2].Pointer()
@@ -387,6 +391,7 @@ func Select(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 
 // Pselect implements linux syscall pselect(2).
 func Pselect(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: pselect(2)\n")
 	nfds := int(args[0].Int()) // select(2) uses an int.
 	readFDs := args[1].Pointer()
 	writeFDs := args[2].Pointer()

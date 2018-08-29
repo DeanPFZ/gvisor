@@ -15,6 +15,8 @@
 package linux
 
 import (
+	"fmt"
+
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/fs"
@@ -25,6 +27,7 @@ import (
 
 // Mount implements Linux syscall mount(2).
 func Mount(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: mount(2)\n")
 	sourceAddr := args[0].Pointer()
 	targetAddr := args[1].Pointer()
 	typeAddr := args[2].Pointer()
@@ -110,6 +113,7 @@ func Mount(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 
 // Umount2 implements Linux syscall umount2(2).
 func Umount2(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: umount2(2)\n")
 	addr := args[0].Pointer()
 	flags := args[1].Int()
 

@@ -25,10 +25,12 @@ import (
 	"gvisor.googlesource.com/gvisor/pkg/sentry/usermem"
 	"gvisor.googlesource.com/gvisor/pkg/syserror"
 	"gvisor.googlesource.com/gvisor/pkg/waiter"
+	"fmt"
 )
 
 // EpollCreate1 implements the epoll_create1(2) linux syscall.
 func EpollCreate1(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: epoll_create1(2)\n")
 	flags := args[0].Int()
 	if flags & ^syscall.EPOLL_CLOEXEC != 0 {
 		return 0, nil, syserror.EINVAL
@@ -45,6 +47,7 @@ func EpollCreate1(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.
 
 // EpollCreate implements the epoll_create(2) linux syscall.
 func EpollCreate(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: epoll_create(2)\n")
 	size := args[0].Int()
 
 	if size <= 0 {
@@ -61,6 +64,7 @@ func EpollCreate(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.S
 
 // EpollCtl implements the epoll_ctl(2) linux syscall.
 func EpollCtl(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: epoll_ctl(2)\n")
 	epfd := kdefs.FD(args[0].Int())
 	op := args[1].Int()
 	fd := kdefs.FD(args[2].Int())
@@ -132,6 +136,7 @@ func copyOutEvents(t *kernel.Task, addr usermem.Addr, e []epoll.Event) error {
 
 // EpollWait implements the epoll_wait(2) linux syscall.
 func EpollWait(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: epoll_wait(2)\n")
 	epfd := kdefs.FD(args[0].Int())
 	eventsAddr := args[1].Pointer()
 	maxEvents := int(args[2].Int())
@@ -153,6 +158,7 @@ func EpollWait(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sys
 
 // EpollPwait implements the epoll_pwait(2) linux syscall.
 func EpollPwait(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: epoll_pwait(2)\n")
 	maskAddr := args[4].Pointer()
 	maskSize := uint(args[5].Uint())
 

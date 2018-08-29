@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"io"
 	"syscall"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/binary"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -30,6 +31,7 @@ import (
 
 // Getdents implements linux syscall getdents(2) for 64bit systems.
 func Getdents(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getdents(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	size := int(args[2].Uint())
@@ -46,6 +48,7 @@ func Getdents(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysc
 
 // Getdents64 implements linux syscall getdents64(2).
 func Getdents64(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getdents64(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	size := int(args[2].Uint())

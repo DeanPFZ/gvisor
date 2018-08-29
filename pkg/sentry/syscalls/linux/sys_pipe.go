@@ -16,6 +16,7 @@ package linux
 
 import (
 	"syscall"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -27,6 +28,7 @@ import (
 
 // pipe2 implements the actual system call with flags.
 func pipe2(t *kernel.Task, addr usermem.Addr, flags uint) (uintptr, error) {
+	fmt.Printf(">>> Syscall: pipe2(2)\n")
 	if flags&^(linux.O_NONBLOCK|linux.O_CLOEXEC) != 0 {
 		return 0, syscall.EINVAL
 	}
@@ -63,6 +65,7 @@ func pipe2(t *kernel.Task, addr usermem.Addr, flags uint) (uintptr, error) {
 
 // Pipe implements linux syscall pipe(2).
 func Pipe(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: pipe(2)\n")
 	addr := args[0].Pointer()
 
 	n, err := pipe2(t, addr, 0)
@@ -71,6 +74,7 @@ func Pipe(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallC
 
 // Pipe2 implements linux syscall pipe2(2).
 func Pipe2(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: pipe2(2)\n")
 	addr := args[0].Pointer()
 	flags := uint(args[1].Uint())
 

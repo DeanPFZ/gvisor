@@ -16,6 +16,7 @@ package linux
 
 import (
 	"syscall"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/bpf"
@@ -78,5 +79,6 @@ func seccomp(t *kernel.Task, mode, flags uint64, addr usermem.Addr) error {
 
 // Seccomp implements linux syscall seccomp(2).
 func Seccomp(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: seccomp(2)\n")
 	return 0, nil, seccomp(t, args[0].Uint64(), args[1].Uint64(), args[2].Pointer())
 }

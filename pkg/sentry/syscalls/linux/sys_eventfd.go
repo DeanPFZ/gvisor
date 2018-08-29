@@ -21,6 +21,7 @@ import (
 	"gvisor.googlesource.com/gvisor/pkg/sentry/fs"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/kernel"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/kernel/eventfd"
+	"fmt"
 )
 
 const (
@@ -33,6 +34,7 @@ const (
 
 // Eventfd2 implements linux syscall eventfd2(2).
 func Eventfd2(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: eventfd2(2)\n")
 	initVal := args[0].Int()
 	flags := uint(args[1].Uint())
 	allOps := uint(EFD_SEMAPHORE | EFD_NONBLOCK | EFD_CLOEXEC)
@@ -60,6 +62,7 @@ func Eventfd2(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysc
 
 // Eventfd implements linux syscall eventfd(2).
 func Eventfd(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: eventfd(2)\n")
 	args[1].Value = 0
 	return Eventfd2(t, args)
 }

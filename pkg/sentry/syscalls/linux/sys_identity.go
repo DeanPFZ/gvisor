@@ -19,6 +19,7 @@ import (
 	"gvisor.googlesource.com/gvisor/pkg/sentry/kernel"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/kernel/auth"
 	"gvisor.googlesource.com/gvisor/pkg/syserror"
+	"fmt"
 )
 
 const (
@@ -28,6 +29,7 @@ const (
 
 // Getuid implements the Linux syscall getuid.
 func Getuid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getuid\n")
 	c := t.Credentials()
 	ruid := c.RealKUID.In(c.UserNamespace).OrOverflow()
 	return uintptr(ruid), nil, nil
@@ -35,6 +37,7 @@ func Getuid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 
 // Geteuid implements the Linux syscall geteuid.
 func Geteuid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: geteuid\n")
 	c := t.Credentials()
 	euid := c.EffectiveKUID.In(c.UserNamespace).OrOverflow()
 	return uintptr(euid), nil, nil
@@ -42,6 +45,7 @@ func Geteuid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // Getresuid implements the Linux syscall getresuid.
 func Getresuid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getresuid(2)\n")
 	ruidAddr := args[0].Pointer()
 	euidAddr := args[1].Pointer()
 	suidAddr := args[2].Pointer()
@@ -63,6 +67,7 @@ func Getresuid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sys
 
 // Getgid implements the Linux syscall getgid.
 func Getgid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getgid(2)\n")
 	c := t.Credentials()
 	rgid := c.RealKGID.In(c.UserNamespace).OrOverflow()
 	return uintptr(rgid), nil, nil
@@ -70,6 +75,7 @@ func Getgid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 
 // Getegid implements the Linux syscall getegid.
 func Getegid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getegid(2)\n")
 	c := t.Credentials()
 	egid := c.EffectiveKGID.In(c.UserNamespace).OrOverflow()
 	return uintptr(egid), nil, nil
@@ -77,6 +83,7 @@ func Getegid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // Getresgid implements the Linux syscall getresgid.
 func Getresgid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getresgid(2)\n")
 	rgidAddr := args[0].Pointer()
 	egidAddr := args[1].Pointer()
 	sgidAddr := args[2].Pointer()
@@ -98,12 +105,14 @@ func Getresgid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sys
 
 // Setuid implements the Linux syscall setuid.
 func Setuid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: setuid(2)\n")
 	uid := auth.UID(args[0].Int())
 	return 0, nil, t.SetUID(uid)
 }
 
 // Setreuid implements the Linux syscall setreuid.
 func Setreuid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: setreuid(2)\n")
 	ruid := auth.UID(args[0].Int())
 	euid := auth.UID(args[1].Int())
 	return 0, nil, t.SetREUID(ruid, euid)
@@ -119,12 +128,14 @@ func Setresuid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sys
 
 // Setgid implements the Linux syscall setgid.
 func Setgid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: setgid(2)\n")
 	gid := auth.GID(args[0].Int())
 	return 0, nil, t.SetGID(gid)
 }
 
 // Setregid implements the Linux syscall setregid.
 func Setregid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: setregid(2)\n")
 	rgid := auth.GID(args[0].Int())
 	egid := auth.GID(args[1].Int())
 	return 0, nil, t.SetREGID(rgid, egid)
@@ -132,6 +143,7 @@ func Setregid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysc
 
 // Setresgid implements the Linux syscall setregid.
 func Setresgid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: setresgid(2)\n")
 	rgid := auth.GID(args[0].Int())
 	egid := auth.GID(args[1].Int())
 	sgid := auth.GID(args[2].Int())
@@ -140,6 +152,7 @@ func Setresgid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sys
 
 // Getgroups implements the Linux syscall getgroups.
 func Getgroups(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getgroups(2)\n")
 	size := int(args[0].Int())
 	if size < 0 {
 		return 0, nil, syserror.EINVAL
@@ -165,6 +178,7 @@ func Getgroups(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sys
 
 // Setgroups implements the Linux syscall setgroups.
 func Setgroups(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: setgroups(2)\n")
 	size := args[0].Int()
 	if size < 0 || size > maxNGroups {
 		return 0, nil, syserror.EINVAL

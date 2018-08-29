@@ -15,6 +15,8 @@
 package linux
 
 import (
+	"fmt"
+
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/kernel"
@@ -24,6 +26,7 @@ import (
 
 // Shmget implements shmget(2).
 func Shmget(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: shmget(2)\n")
 	key := args[0].Int()
 	size := uint64(args[1].SizeT())
 	flag := args[2].Int()
@@ -55,6 +58,7 @@ func findSegment(t *kernel.Task, id int32) (*shm.Shm, error) {
 
 // Shmat implements shmat(2).
 func Shmat(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: shmat(2)\n")
 	id := args[0].Int()
 	addr := args[1].Pointer()
 	flag := args[2].Int()
@@ -79,6 +83,7 @@ func Shmat(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 
 // Shmdt implements shmdt(2).
 func Shmdt(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: shmdt(2)\n")
 	addr := args[0].Pointer()
 	err := t.MemoryManager().DetachShm(t, addr)
 	return 0, nil, err
@@ -86,6 +91,7 @@ func Shmdt(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 
 // Shmctl implements shmctl(2).
 func Shmctl(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: shmctl(2)\n")
 	id := args[0].Int()
 	cmd := args[1].Int()
 	buf := args[2].Pointer()
