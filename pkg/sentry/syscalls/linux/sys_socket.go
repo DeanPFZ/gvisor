@@ -17,6 +17,7 @@ package linux
 import (
 	"syscall"
 	"time"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/binary"
@@ -173,7 +174,7 @@ func Socket(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 	domain := int(args[0].Int())
 	stype := args[1].Int()
 	protocol := int(args[2].Int())
-
+	fmt.Printf(">>> Syscall: socket(2)\n")
 	// Check and initialize the flags.
 	if stype & ^(0xf|linux.SOCK_NONBLOCK|linux.SOCK_CLOEXEC) != 0 {
 		return 0, nil, syscall.EINVAL
@@ -205,6 +206,7 @@ func SocketPair(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sy
 	stype := args[1].Int()
 	protocol := int(args[2].Int())
 	socks := args[3].Pointer()
+	fmt.Printf(">>> Syscall: socketpair(2)\n")
 
 	// Check and initialize the flags.
 	if stype & ^(0xf|linux.SOCK_NONBLOCK|linux.SOCK_CLOEXEC) != 0 {
@@ -320,6 +322,7 @@ func accept(t *kernel.Task, fd kdefs.FD, addr usermem.Addr, addrLen usermem.Addr
 
 // Accept4 implements the linux syscall accept4(2).
 func Accept4(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: accept4(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	addrlen := args[2].Pointer()
@@ -331,6 +334,7 @@ func Accept4(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // Accept implements the linux syscall accept(2).
 func Accept(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: accept(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	addrlen := args[2].Pointer()
@@ -341,6 +345,7 @@ func Accept(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 
 // Bind implements the linux syscall bind(2).
 func Bind(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: bind(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	addrlen := args[2].Uint()
@@ -369,6 +374,7 @@ func Bind(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallC
 
 // Listen implements the linux syscall listen(2).
 func Listen(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: listen(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	backlog := args[1].Int()
 
@@ -426,6 +432,7 @@ func Shutdown(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysc
 
 // GetSockOpt implements the linux syscall getsockopt(2).
 func GetSockOpt(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getsockopt(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	level := args[1].Int()
 	name := args[2].Int()
@@ -483,6 +490,7 @@ func GetSockOpt(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sy
 //
 // Note that unlike Linux, enabling SO_PASSCRED does not autobind the socket.
 func SetSockOpt(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: setsockopt(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	level := args[1].Int()
 	name := args[2].Int()
@@ -523,6 +531,7 @@ func SetSockOpt(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sy
 
 // GetSockName implements the linux syscall getsockname(2).
 func GetSockName(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getsockname(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	addrlen := args[2].Pointer()
@@ -551,6 +560,7 @@ func GetSockName(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.S
 
 // GetPeerName implements the linux syscall getpeername(2).
 func GetPeerName(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getpeername(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	addrlen := args[2].Pointer()
@@ -579,6 +589,7 @@ func GetPeerName(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.S
 
 // RecvMsg implements the linux syscall recvmsg(2).
 func RecvMsg(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: recvmsg\n")
 	fd := kdefs.FD(args[0].Int())
 	msgPtr := args[1].Pointer()
 	flags := args[2].Int()
@@ -623,6 +634,7 @@ func RecvMsg(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // RecvMMsg implements the linux syscall recvmmsg(2).
 func RecvMMsg(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: recvmmsg(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	msgPtr := args[1].Pointer()
 	vlen := args[2].Uint()
@@ -845,6 +857,7 @@ func recvFrom(t *kernel.Task, fd kdefs.FD, bufPtr usermem.Addr, bufLen uint64, f
 
 // RecvFrom implements the linux syscall recvfrom(2).
 func RecvFrom(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: recvfrom(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	bufPtr := args[1].Pointer()
 	bufLen := args[2].Uint64()
@@ -858,6 +871,7 @@ func RecvFrom(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysc
 
 // SendMsg implements the linux syscall sendmsg(2).
 func SendMsg(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sendmsg(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	msgPtr := args[1].Pointer()
 	flags := args[2].Int()
@@ -895,6 +909,7 @@ func SendMsg(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // SendMMsg implements the linux syscall sendmmsg(2).
 func SendMMsg(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sendmmsg(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	msgPtr := args[1].Pointer()
 	vlen := args[2].Uint()
@@ -1059,6 +1074,7 @@ func sendTo(t *kernel.Task, fd kdefs.FD, bufPtr usermem.Addr, bufLen uint64, fla
 
 // SendTo implements the linux syscall sendto(2).
 func SendTo(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sendto(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	bufPtr := args[1].Pointer()
 	bufLen := args[2].Uint64()

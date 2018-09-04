@@ -15,6 +15,8 @@
 package linux
 
 import (
+	"fmt"
+
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/fs"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/kernel"
@@ -24,6 +26,7 @@ import (
 
 // Sync implements linux system call sync(2).
 func Sync(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sync(2)\n")
 	t.MountNamespace().SyncAll(t)
 	// Sync is always successful.
 	return 0, nil, nil
@@ -31,6 +34,7 @@ func Sync(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallC
 
 // Syncfs implements linux system call syncfs(2).
 func Syncfs(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: syncfs(2)\n")
 	fd := kdefs.FD(args[0].Int())
 
 	file := t.FDMap().GetFile(fd)
@@ -46,6 +50,7 @@ func Syncfs(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 
 // Fsync implements linux syscall fsync(2).
 func Fsync(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: fsync(2)\n")
 	fd := kdefs.FD(args[0].Int())
 
 	file := t.FDMap().GetFile(fd)
@@ -62,6 +67,7 @@ func Fsync(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 //
 // At the moment, it just calls Fsync, which is a big hammer, but correct.
 func Fdatasync(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: fdatasync(2)\n")
 	fd := kdefs.FD(args[0].Int())
 
 	file := t.FDMap().GetFile(fd)

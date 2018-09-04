@@ -17,6 +17,7 @@ package linux
 import (
 	"syscall"
 	"time"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -98,6 +99,7 @@ func findTimer(t *kernel.Task, w ItimerType) (*ktime.Timer, error) {
 
 // Getitimer implements linux syscall getitimer(2).
 func Getitimer(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getitimer(2)\n")
 	timerID := ItimerType(args[0].Int())
 	val := args[1].Pointer()
 
@@ -116,6 +118,7 @@ func Getitimer(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sys
 
 // Setitimer implements linux syscall setitimer(2).
 func Setitimer(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: setitimer(2)\n")
 	timerID := ItimerType(args[0].Int())
 	newVal := args[1].Pointer()
 	oldVal := args[2].Pointer()
@@ -148,6 +151,7 @@ func Setitimer(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sys
 
 // Alarm implements linux syscall alarm(2).
 func Alarm(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: alarm(2)\n")
 	duration := time.Duration(args[0].Uint()) * time.Second
 
 	timer := t.ThreadGroup().Timer().RealTimer
@@ -169,6 +173,7 @@ func Alarm(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 
 // TimerCreate implements linux syscall timer_create(2).
 func TimerCreate(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: timer_create(2)\n")
 	clockID := args[0].Int()
 	sevp := args[1].Pointer()
 	timerIDp := args[2].Pointer()
@@ -201,6 +206,7 @@ func TimerCreate(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.S
 
 // TimerSettime implements linux syscall timer_settime(2).
 func TimerSettime(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: timer_settime(2)\n")
 	timerID := linux.TimerID(args[0].Value)
 	flags := args[1].Int()
 	newValAddr := args[2].Pointer()
@@ -224,6 +230,7 @@ func TimerSettime(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.
 
 // TimerGettime implements linux syscall timer_gettime(2).
 func TimerGettime(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: timer_gettime(2)\n")
 	timerID := linux.TimerID(args[0].Value)
 	curValAddr := args[1].Pointer()
 
@@ -237,6 +244,7 @@ func TimerGettime(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.
 
 // TimerGetoverrun implements linux syscall timer_getoverrun(2).
 func TimerGetoverrun(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: timer_getoverrun(2)\n")
 	timerID := linux.TimerID(args[0].Value)
 
 	o, err := t.IntervalTimerGetoverrun(timerID)
@@ -248,6 +256,7 @@ func TimerGetoverrun(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kern
 
 // TimerDelete implements linux syscall timer_delete(2).
 func TimerDelete(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: timer_delete(2)\n")
 	timerID := linux.TimerID(args[0].Value)
 	return 0, nil, t.IntervalTimerDelete(timerID)
 }

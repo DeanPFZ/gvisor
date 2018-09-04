@@ -16,6 +16,7 @@ package linux
 
 import (
 	"syscall"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -28,6 +29,7 @@ import (
 
 // Stat implements linux syscall stat(2).
 func Stat(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: stat(2)\n")
 	addr := args[0].Pointer()
 	statAddr := args[1].Pointer()
 
@@ -43,6 +45,7 @@ func Stat(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallC
 
 // Fstatat implements linux syscall newfstatat, i.e. fstatat(2).
 func Fstatat(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: fstatat(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	addr := args[1].Pointer()
 	statAddr := args[2].Pointer()
@@ -71,6 +74,7 @@ func Fstatat(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // Lstat implements linux syscall lstat(2).
 func Lstat(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: lstat(2)\n")
 	addr := args[0].Pointer()
 	statAddr := args[1].Pointer()
 
@@ -86,6 +90,7 @@ func Lstat(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 
 // Fstat implements linux syscall fstat(2).
 func Fstat(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: fstat(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	statAddr := args[1].Pointer()
 
@@ -146,6 +151,7 @@ func stat(t *kernel.Task, d *fs.Dirent, dirPath bool, statAddr usermem.Addr) err
 
 // Statfs implements linux syscall statfs(2).
 func Statfs(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: statfs(2)\n")
 	addr := args[0].Pointer()
 	statfsAddr := args[1].Pointer()
 
@@ -161,6 +167,7 @@ func Statfs(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 
 // Fstatfs implements linux syscall fstatfs(2).
 func Fstatfs(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: fstatfs(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	statfsAddr := args[1].Pointer()
 

@@ -15,6 +15,8 @@
 package linux
 
 import (
+	"fmt"
+
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/fs"
@@ -27,6 +29,7 @@ import (
 
 // TimerfdCreate implements Linux syscall timerfd_create(2).
 func TimerfdCreate(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: timerfd_create(2)\n")
 	clockID := args[0].Int()
 	flags := args[1].Int()
 
@@ -61,6 +64,7 @@ func TimerfdCreate(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel
 
 // TimerfdSettime implements Linux syscall timerfd_settime(2).
 func TimerfdSettime(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: timerfd_settime(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	flags := args[1].Int()
 	newValAddr := args[2].Pointer()
@@ -101,6 +105,7 @@ func TimerfdSettime(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kerne
 
 // TimerfdGettime implements Linux syscall timerfd_gettime(2).
 func TimerfdGettime(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: timerfd_gettime(2)\n")
 	fd := kdefs.FD(args[0].Int())
 	curValAddr := args[1].Pointer()
 

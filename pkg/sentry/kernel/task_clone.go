@@ -20,7 +20,6 @@ import (
 	"gvisor.googlesource.com/gvisor/pkg/sentry/kernel/auth"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/usermem"
 	"gvisor.googlesource.com/gvisor/pkg/syserror"
-	"fmt"
 )
 
 // SharingOptions controls what resources are shared by a new task created by
@@ -139,7 +138,6 @@ func (t *Task) Clone(opts *CloneOptions) (ThreadID, *SyscallControl, error) {
 	// Since signal actions may refer to application signal handlers by virtual
 	// address, any set of signal handlers must refer to the same address
 	// space.
-	fmt.Printf("Attempting Clone!")
 	if !opts.NewSignalHandlers && opts.NewAddressSpace {
 		return 0, nil, syserror.EINVAL
 	}

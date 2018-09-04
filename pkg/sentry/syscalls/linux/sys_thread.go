@@ -16,6 +16,7 @@ package linux
 
 import (
 	"syscall"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -52,6 +53,7 @@ const (
 
 // Getppid implements linux syscall getppid(2).
 func Getppid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getppid(2)\n")
 	parent := t.Parent()
 	if parent == nil {
 		return 0, nil, nil
@@ -61,16 +63,19 @@ func Getppid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // Getpid implements linux syscall getpid(2).
 func Getpid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getpid(2)\n")
 	return uintptr(t.ThreadGroup().ID()), nil, nil
 }
 
 // Gettid implements linux syscall gettid(2).
 func Gettid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: gettid(2)\n")	
 	return uintptr(t.ThreadID()), nil, nil
 }
 
 // Execve implements linux syscall execve(2).
 func Execve(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: execve(2)\n")
 	filenameAddr := args[0].Pointer()
 	argvAddr := args[1].Pointer()
 	envvAddr := args[2].Pointer()
@@ -114,6 +119,7 @@ func Execve(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 
 // Exit implements linux syscall exit(2).
 func Exit(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: exit(2)\n")
 	status := int(args[0].Int())
 	t.PrepareExit(kernel.ExitStatus{Code: status})
 	return 0, kernel.CtrlDoExit, nil
@@ -121,6 +127,8 @@ func Exit(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallC
 
 // ExitGroup implements linux syscall exit_group(2).
 func ExitGroup(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	
+	fmt.Printf(">>> Syscall: exit_group(2)\n")
 	status := int(args[0].Int())
 	t.PrepareGroupExit(kernel.ExitStatus{Code: status})
 	return 0, kernel.CtrlDoExit, nil
@@ -163,6 +171,7 @@ func clone(t *kernel.Task, flags int, stack usermem.Addr, parentTID usermem.Addr
 // current linux 3.11 x86_64:
 //    sys_clone(clone_flags, newsp, parent_tidptr, child_tidptr, tls_val)
 func Clone(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: clone(2)\n")
 	flags := int(args[0].Int())
 	stack := args[1].Pointer()
 	parentTID := args[2].Pointer()
@@ -175,6 +184,7 @@ func Clone(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 func Fork(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
 	// "A call to fork() is equivalent to a call to clone(2) specifying flags
 	// as just SIGCHLD." - fork(2)
+	fmt.Printf(">>> Syscall: fork(2)\n")
 	return clone(t, int(syscall.SIGCHLD), 0, 0, 0, 0)
 }
 
@@ -185,6 +195,7 @@ func Vfork(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 	//
 	//     CLONE_VM | CLONE_VFORK | SIGCHLD
 	// """ - vfork(2)
+	fmt.Printf(">>> Syscall: vfork(2)\n")
 	return clone(t, syscall.CLONE_VM|syscall.CLONE_VFORK|int(syscall.SIGCHLD), 0, 0, 0, 0)
 }
 
@@ -258,6 +269,7 @@ func wait4(t *kernel.Task, pid int, statusAddr usermem.Addr, options int, rusage
 
 // Wait4 implements linux syscall wait4(2).
 func Wait4(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: wait4(2)\n")
 	pid := int(args[0].Int())
 	statusAddr := args[1].Pointer()
 	options := int(args[2].Uint())
@@ -269,6 +281,7 @@ func Wait4(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscall
 
 // WaitPid implements linux syscall waitpid(2).
 func WaitPid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: waitpid(2)\n")
 	pid := int(args[0].Int())
 	statusAddr := args[1].Pointer()
 	options := int(args[2].Uint())
@@ -279,6 +292,7 @@ func WaitPid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // Waitid implements linux syscall waitid(2).
 func Waitid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: waitid(2)\n")
 	idtype := args[0].Int()
 	id := args[1].Int()
 	infop := args[2].Pointer()
@@ -391,6 +405,7 @@ func SetTidAddress(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel
 
 // Unshare implements linux syscall unshare(2).
 func Unshare(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: unshare(2)\n")
 	flags := args[0].Int()
 	opts := kernel.SharingOptions{
 		NewAddressSpace:     flags&syscall.CLONE_VM == syscall.CLONE_VM,
@@ -419,12 +434,14 @@ func Unshare(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // SchedYield implements linux syscall sched_yield(2).
 func SchedYield(t *kernel.Task, _ arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sched_yield(2)\n")
 	t.Yield()
 	return 0, nil, nil
 }
 
 // SchedSetaffinity implements linux syscall sched_setaffinity(2).
 func SchedSetaffinity(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sched_setaffinity(2)\n")
 	tid := args[0].Int()
 	size := args[1].SizeT()
 	maskAddr := args[2].Pointer()
@@ -451,6 +468,7 @@ func SchedSetaffinity(t *kernel.Task, args arch.SyscallArguments) (uintptr, *ker
 
 // SchedGetaffinity implements linux syscall sched_getaffinity(2).
 func SchedGetaffinity(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sched_getaffinity(2)\n")
 	tid := args[0].Int()
 	size := args[1].SizeT()
 	maskAddr := args[2].Pointer()
@@ -488,6 +506,7 @@ func SchedGetaffinity(t *kernel.Task, args arch.SyscallArguments) (uintptr, *ker
 
 // Getcpu implements linux syscall getcpu(2).
 func Getcpu(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getcpu(2)\n")
 	cpu := args[0].Pointer()
 	node := args[1].Pointer()
 	// third argument to this system call is nowadays unused.
@@ -515,6 +534,7 @@ func Setpgid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 	// Note that throughout this function, pgid is interpreted with respect
 	// to t's namespace, not with respect to the selected ThreadGroup's
 	// namespace (which may be different).
+	fmt.Printf(">>> Syscall: setpgid(2)\n")
 	pid := kernel.ThreadID(args[0].Int())
 	pgid := kernel.ProcessGroupID(args[1].Int())
 
@@ -575,11 +595,13 @@ func Setpgid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // Getpgrp implements the linux syscall getpgrp(2).
 func Getpgrp(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getpgrp(2)\n")
 	return uintptr(t.PIDNamespace().IDOfProcessGroup(t.ThreadGroup().ProcessGroup())), nil, nil
 }
 
 // Getpgid implements the linux syscall getpgid(2).
 func Getpgid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getpgid(2)\n")
 	tid := kernel.ThreadID(args[0].Int())
 	if tid == 0 {
 		return Getpgrp(t, args)
@@ -595,11 +617,13 @@ func Getpgid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sysca
 
 // Setsid implements the linux syscall setsid(2).
 func Setsid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: setsid(2)\n")
 	return 0, nil, t.ThreadGroup().CreateSession()
 }
 
 // Getsid implements the linux syscall getsid(2).
 func Getsid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getsid(2)\n")
 	tid := kernel.ThreadID(args[0].Int())
 	if tid == 0 {
 		return uintptr(t.PIDNamespace().IDOfSession(t.ThreadGroup().Session())), nil, nil
@@ -617,6 +641,7 @@ func Getsid(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Syscal
 //
 // This is a stub; real priorities require a full scheduler.
 func Getpriority(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: getpriority(2)\n")
 	which := args[0].Int()
 	who := kernel.ThreadID(args[1].Int())
 
@@ -653,6 +678,7 @@ func Getpriority(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.S
 //
 // This is a stub; real priorities require a full scheduler.
 func Setpriority(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: setpriority(2)\n")
 	which := args[0].Int()
 	who := kernel.ThreadID(args[1].Int())
 	niceval := int(args[2].Int())
@@ -695,6 +721,7 @@ func Setpriority(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.S
 
 // Ptrace implements linux system call ptrace(2).
 func Ptrace(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: ptrace(2)\n")
 	req := args[0].Int64()
 	pid := kernel.ThreadID(args[1].Int())
 	addr := args[2].Pointer()

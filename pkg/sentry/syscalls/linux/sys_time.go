@@ -16,6 +16,7 @@ package linux
 
 import (
 	"time"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -65,6 +66,7 @@ func targetTask(t *kernel.Task, c int32) *kernel.Task {
 
 // ClockGetres implements linux syscall clock_getres(2).
 func ClockGetres(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: clock_getres(2)\n")
 	clockID := int32(args[0].Int())
 	addr := args[1].Pointer()
 	r := linux.Timespec{
@@ -135,6 +137,7 @@ func getClock(t *kernel.Task, clockID int32) (ktime.Clock, error) {
 
 // ClockGettime implements linux syscall clock_gettime(2).
 func ClockGettime(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: clock_gettime(2)\n")
 	clockID := int32(args[0].Int())
 	addr := args[1].Pointer()
 
@@ -148,11 +151,13 @@ func ClockGettime(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.
 
 // ClockSettime implements linux syscall clock_settime(2).
 func ClockSettime(*kernel.Task, arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: clock_settime(2)\n")
 	return 0, nil, syserror.EPERM
 }
 
 // Time implements linux syscall time(2).
 func Time(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: time(2)\n")
 	addr := args[0].Pointer()
 
 	r := t.Kernel().RealtimeClock().Now().TimeT()
@@ -260,6 +265,7 @@ func clockNanosleepFor(t *kernel.Task, c ktime.Clock, dur time.Duration, rem use
 
 // Nanosleep implements linux syscall Nanosleep(2).
 func Nanosleep(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: nanosleep(2)\n")
 	addr := args[0].Pointer()
 	rem := args[1].Pointer()
 
@@ -280,6 +286,7 @@ func Nanosleep(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.Sys
 
 // ClockNanosleep implements linux syscall clock_nanosleep(2).
 func ClockNanosleep(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: clock_nanosleep(2)\n")
 	clockID := int32(args[0].Int())
 	flags := args[1].Int()
 	addr := args[2].Pointer()
@@ -318,6 +325,7 @@ func ClockNanosleep(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kerne
 
 // Gettimeofday implements linux syscall gettimeofday(2).
 func Gettimeofday(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: gettimeofday(2)\n")
 	tv := args[0].Pointer()
 	tz := args[1].Pointer()
 

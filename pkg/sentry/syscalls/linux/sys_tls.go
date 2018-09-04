@@ -18,6 +18,7 @@ package linux
 
 import (
 	"syscall"
+	"fmt"
 
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
@@ -28,6 +29,7 @@ import (
 // ArchPrctl implements linux syscall arch_prctl(2).
 // It sets architecture-specific process or thread state for t.
 func ArchPrctl(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: arch_prctl(2)\n")
 	switch args[0].Int() {
 	case linux.ARCH_GET_FS:
 		addr := args[1].Pointer()

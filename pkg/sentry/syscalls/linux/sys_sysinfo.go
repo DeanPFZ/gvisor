@@ -15,6 +15,8 @@
 package linux
 
 import (
+	"fmt"
+
 	"gvisor.googlesource.com/gvisor/pkg/abi/linux"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/arch"
 	"gvisor.googlesource.com/gvisor/pkg/sentry/kernel"
@@ -23,6 +25,7 @@ import (
 
 // Sysinfo implements the sysinfo syscall as described in man 2 sysinfo.
 func Sysinfo(t *kernel.Task, args arch.SyscallArguments) (uintptr, *kernel.SyscallControl, error) {
+	fmt.Printf(">>> Syscall: sysinfo\n")
 	addr := args[0].Pointer()
 
 	mem := t.Kernel().Platform.Memory()
