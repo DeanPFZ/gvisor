@@ -270,14 +270,38 @@ cd gvisor
 ```
 
 ### Building
+Install required tools:
+```
+# Git (sudo yum install git)
 
-Build and install the `runsc` binary.
+# Virtual Machine Needed! (VirtualBox)
+# Using Vagrant..
+# >> vagrant box add centos/7
+# >> vagrant init centos/7
+# >> vagrant up
+# >> vagrant ssh
+```
+Run INSTALLSRC_CENTOS.sh:
 
 ```
-bazel build runsc
-sudo cp ./bazel-bin/runsc/linux_amd64_pure_stripped/runsc /usr/local/bin
+./INSTALLSRC_CENTOS.sh
 ```
+### Building with user program
+Create a directory containing Dockerfile and user program (main.c)
+```
+sudo docker build -t test  #"test" should be the name of the user directory
 
+```
+User can verify the build image by checking
+```
+sudo docker image ls
+
+```
+### Running user program with gvisor
+```
+sudo docker run --security-opt seccomp:unconfined --runtime=runsc testing
+
+```
 ### Testing
 
 The gVisor test suite can be run with Bazel:
@@ -285,7 +309,6 @@ The gVisor test suite can be run with Bazel:
 ```
 bazel test ...
 ```
-
 ### Debugging
 
 To enable debug and system call logging, add the `runtimeArgs` below to your
